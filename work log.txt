@@ -1,0 +1,22 @@
+August 20th
+- Concept created
+- learned Ren'py basics to creating a VN -> 1 hour 30 min
+
+August 21th 
+- Demo of the basics of Ren'py created (exculding sound effects and animations) -> 2 hours
+- facebook group created and demo shared
+
+August 22nd
+- Title screen -> 10 minutes
+- Death screen -> 30 minutes
+
+
+
+
+Tasks to complete
+- Create story
+- Inventory mechinism
+- Animaitions
+- Sounds effects
+- Chat Style per person
+- Interface style
