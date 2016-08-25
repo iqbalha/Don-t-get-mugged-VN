@@ -17,7 +17,10 @@ image tutMug normal:
     "lousy_mugger.png"
     zoom 0.7
     yalign 0.48
-
+image tutMug batless:
+    "batless_other_mugger.png"
+    zoom 0.7
+    yalign 0.48
 # Define text baised characters
 define narrator = Character(None, kind=nvl)
 define game = Character(None, color="#e8ffe8")
@@ -73,9 +76,20 @@ image bloodSplatter:
         #"blood_spatter4.png"
         #zoom .6
     alpha 0.6
-    
+
+label start:
+    jump chapterMenu
+label chapterMenu: # developer menu
+    menu:
+        "Intro":
+            jump intro
+        "tutorialEncounter":
+            jump preTut
+        "Penguin King":
+            jump penguinEncounter
+            
 ############## The game starts here.
-label start:    
+label intro:    
     # create Varaibles
     $ money = 18.41  
     $ observed = False
@@ -197,8 +211,11 @@ label tutorialChoice:
             ground where you were just standing. The man staggers from the recoil of the bat.
             As your feet touch the ground you spring onto the now vulerable man."
             #toppled man
+            show tutMug batless
             game "You miss judged the distance and the man is able to back off before you can
             knock him to the ground. He immediately regains his balance and.... runs away."
+            hide tutMug
+            
             game "You catch your breath and look at the baseball bat he left behind.  There is a
             crack running down the center of the bat making it completely useless. Suprised you
             walk over to it to get a closer look."
@@ -206,7 +223,7 @@ label tutorialChoice:
             where the man stuck the ground surrounded by tiny wooden splinters. It seems you
             lucked out this time but you should be catious. In the future you might not
             get a second chance."
-            jump pengiunEncounter
+            jump penguinEncounter
         "*Approach the man menacingly*":
             jump endTutorial
         

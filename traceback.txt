@@ -1,20 +1,20 @@
 ﻿I'm sorry, but an uncaught exception occurred.
 
 While running game code:
-  File "game/script.rpy", line 209, in script
-    jump pengiunEncounter
-ScriptError: could not find label 'pengiunEncounter'.
+  File "game/script.rpy", line 89, in script
+    jump penguinEnounter
+ScriptError: could not find label 'penguinEnounter'.
 
 -- Full Traceback ------------------------------------------------------------
 
 Full traceback:
-  File "game/script.rpy", line 209, in script
-    jump pengiunEncounter
+  File "game/script.rpy", line 89, in script
+    jump penguinEnounter
   File "C:\Users\haris\Documents\renpy-6.99.10-sdk\renpy\ast.py", line 1520, in execute
     rv = renpy.game.script.lookup(target)
   File "C:\Users\haris\Documents\renpy-6.99.10-sdk\renpy\script.py", line 843, in lookup
     raise ScriptError("could not find label '%s'." % str(original))
-ScriptError: could not find label 'pengiunEncounter'.
+ScriptError: could not find label 'penguinEnounter'.
 
 Windows-8-6.2.9200
 Ren'Py 6.99.10.1227

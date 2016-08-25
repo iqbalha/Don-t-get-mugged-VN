@@ -26,12 +26,14 @@ August 24th
 - typo.txt created
 - added transitions to the intro (1 hour on one) <- 1 hour, 15 minutes
 - refinined the introduction <- 1 hour 30 minutes
+- Developer Chapter menu added <- 15 minutes
+- Creating new images <- 45 minutes
 
 Tasks to complete
 - Create story ( What happened to the main character, Conclusion)
 - additional encounter
 - Inventory mechinism
-- Animaitions
+- Encounter Animaitions
 - Sounds effects
 - Chat Style per person -> player thought and speach different colours
 - Interface style -> menu option colours to non-black 
