@@ -2,8 +2,8 @@
 errors listed below, and try again.
 
 
-File "game/script.rpy", line 33: Line is followed by a block, despite not being a menu choice. Did you forget a colon at the end of the line?
-    "I'm just trying to get home"
-                                 ^
+File "game/script.rpy", line 3: invalid syntax
+    ComposeTransition(slideawayup, before = Fade(0.4, 0.35 0.5), after=sometrans)
+                                                              ^
 
 Ren'Py Version: Ren'Py 6.99.10.1227

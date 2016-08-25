@@ -9,14 +9,29 @@ August 21th
 August 22nd
 - Title screen -> 10 minutes
 - Death screen -> 30 minutes
+- Conencted project ot bitbucket -> 5 minutes
 
+August 23rd
+- 3 person grou discussion -> 30 minutes
+- Narrative doccument created on drive
 
+August 24th
+- Group work <- 2 hours and 30 minutes
+    Chris created the introduction narrative
+    Haris created half of the tutorial encounter
+    Faruk designed the Colenal sanders encounter (30 minutes)
+- Creating introduction scenes of VN (excluding inventory intro)<- 2 hours
 
+August 24th
+- typo.txt created
+- added transitions to the intro (1 hour on one) <- 1 hour, 15 minutes
+- refinined the introduction <- 1 hour 30 minutes
 
 Tasks to complete
-- Create story
+- Create story ( What happened to the main character, Conclusion)
+- additional encounter
 - Inventory mechinism
 - Animaitions
 - Sounds effects
-- Chat Style per person
-- Interface style
+- Chat Style per person -> player thought and speach different colours
+- Interface style -> menu option colours to non-black 
