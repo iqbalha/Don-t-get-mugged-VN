@@ -30,6 +30,9 @@ image tutMug batless:
 # Double mugging rash character
 define doubleRash = Character('Mugger', color="#c8f4d8")
 define doubleStalker = Character('Stalker', color="#2ce438")
+# Ally
+define unknown = Character("?????")
+define prisoner = Character('Prisoner',  color="#7d5e54")
 # Define text baised characters
 define narrator = Character(None, kind=nvl)
 define game = Character(None, color="#e8ffe8")
@@ -65,7 +68,12 @@ image bg trap_door:
 image bg dev_men:
     "moon.jpg"
     zoom 1.7
-image bg intersection = "city_intersection.jpg"
+image bg intersection:
+    "city_intersection.jpg"
+    zoom 1.3
+image bg pris_road:
+    "prisoner_road.jpg"
+    zoom 2.6
 image bg black = "black_screen.png"
 image bg brown = "brown_screen.png"
 image bg white = "white_screen.png"
@@ -325,20 +333,21 @@ label endTutorial:
 ######################### Forest Enterance 
 label forestEnterance:
      scene bg forest with longFade
-     narrator "Narration occurs describing the forest"
-     narrator "Naration of you walking into the forest and"
-     narrator "Narration of being in the forest"
-     narrator "Narration of moving to a new location"
+     narrator "Narration occurs describing the forest before you enter"
+     narrator "you walking into the forest"
+     narrator "Narration of the forest as you move through it"
+     narrator "Moving to a new location in the forest"
      nvl clear
      
      scene bg white with wipeleft
      pause 0.75
      scene bg forest with wipeleft
-     narrator "Narration new locations description. The old mugging trap spot"
+     narrator "Narrate new locations description. (this is one of the  the old mugging trap
+     spot, you had when you where working with your unit agianst the orginization)"
      show headache
      narrator "Narration of what you can infer from the location"
      narrator "Narration of suspitous activity causing you to think someone might be
-     following you but you brush it off"
+     following you but you brush it off and keep moving forward"
      nvl clear
      
      scene bg white with blinds
@@ -569,9 +578,90 @@ label penguinPass:
     jump penguinsDomain
     
 label penguinsDomain:
-    $ townCleared = true
-    narrator ""
-    scene bg intersection with quickFade
+    $ townCleared = True
+    narrator "You wait to make sure the [pen.name] is completely gone before moving"
+    narrator "Narration about going through the town"
+    
+    scene bg intersection at topleft with quickFade
+    narrator "Narration about encountering an intersection"
+
+########################## Intersection    
+label intersection:
+    narrator "looking around at nearby signs gives you indications of where they lead"
+    nvl clear
+    
+    menu:
+        game "Which road would you like to take?"
+        
+        "The path that leads to the ice cream shop":
+            jump discoKnightIntro
+                
+        "The path that leads to the prisoner":
+            jump prisonerIntro
+            
+        "Head back to the cornfield":
+            jump endTutorial    
     
 ################# Town Continuation
-label townContinuation:    
+label townContinuation:
+    scene bg city at right with longFade
+    narrator "Narration about traveling back through the penguins domain"
+    narrator "Voice your thougts about hoping he doesn't come back"
+    scene bg intersection at topleft with longFade
+    narrator "Narration of reaching the intersection and being glad that you arrived safely"
+    nvl clear
+    jump intersection
+
+label prisonerIntro:
+    scene bg white with wipeleft
+    pause 0.75
+    scene bg pris_road with wipeleft
+    narrator "narration of walking down the road and how bleak this aread look even
+    though it's well lit"
+    narrator "Description of one door with a rusted lock that you notice as you walk by"
+    nvl clear
+    
+    # quiet sound
+    pause 0.3
+    game "description of the sound you hear"
+    player "Is anyone there?"
+    # louder sound
+    pause 0.3
+    game "description of the sound made form the man on the other side of the door
+    aproching the door"
+    prisoner "Yes, I'm trapped in here you have to help me get out"
+    player "expersses skeptecism of trusting someone after what you've been through"
+    prisoner "Their the ones that trapped me in here"
+    prisoner "I was working against the organization and they caught me. Then they threw me
+    in here while they went to talk to the higher ups of what to do with me"
+    prisoner "The lower ranked members are very disorginized so they won't be able to figure
+    out what to do with me for a while, but they'll defenitley be back before the sun comes up"
+    prisoner "You might be the only one who can get me out of here"
+    
+    player "you ask about the orginization"
+    prisoner "Prisoner explains how the orginization works"
+    prisoner "So will you get me out of here now"
+    
+    player "Hold on, let me see if I can find anything here to break the lock"
+    game "The lock is made of iron and there would be no way for you to break it ordinarily,
+    but it's rusted over"
+    game "You might be able to break it if you find something that can help deliever a powerful
+    blow to the lock"
+    
+    scene bg pris_road with quickFade
+    game "you look around for several minutes and see that there is nothing here that
+    can help you break the lock"
+    player "I... I couldn't find anything that would be strong enough to break the lock"
+    prisoner "Damn it!"
+    prisoner "I already knew I was a gonner once they caught me."
+    prisoner "But this isn't the end. There were others working with me, fighting the 
+    organization."
+    prisonet "One of use managed "
+    
+    
+label discoKnightIntro:
+    scene bg white with wiperight
+    pause 0.75
+    scene bg pris_road with wiperight
+  
+

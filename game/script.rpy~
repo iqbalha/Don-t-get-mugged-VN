@@ -1,7 +1,4 @@
-﻿init python:
-    import time
-
-# Create special transitions
+﻿# Create special transitions
 define updownTransHelper = ComposeTransition(slideup,
     after=Fade(0.4, 0.35, 0.6, color="#00001a"))
 define updownTrans = ComposeTransition(slideawayup,
@@ -33,6 +30,9 @@ image tutMug batless:
 # Double mugging rash character
 define doubleRash = Character('Mugger', color="#c8f4d8")
 define doubleStalker = Character('Stalker', color="#2ce438")
+# Ally
+define unknown = Character("?????")
+define prisoner = Character('Prisoner',  color="#7d5e9")
 # Define text baised characters
 define narrator = Character(None, kind=nvl)
 define game = Character(None, color="#e8ffe8")
@@ -40,7 +40,7 @@ define player = Character(None, color="#c8c8c8")
 define player_nar = Character(None, kind=nvl, color="#c231d4")
  
 # background images
-image bg blank:
+image bg city:
     "empty_Street.png"
     zoom 0.18
 image bg park:
@@ -62,6 +62,15 @@ image bg sky:
 image bg money:
     "money_screen.png"
     zoom 1.5
+image bg trap_door:
+    "trap_door.jpg"
+    zoom 1.6
+image bg dev_men:
+    "moon.jpg"
+    zoom 1.7
+image bg intersection:
+    "city_intersection.jpg"
+    zoom 1.3
 image bg black = "black_screen.png"
 image bg brown = "brown_screen.png"
 image bg white = "white_screen.png"
@@ -97,10 +106,16 @@ init:
     $ money = 18.41  
     $ observed = False
     $ inspected = False
+    $ forestCleared = False
+    $ townCleared = False
+    $ lost_bat = True
     
 label start:
+    stop music fadeout 2.0
+    queue music "music/bg_music.mp3"
     jump chapterMenu
 label chapterMenu: # developer menu
+    scene bg dev_men at top
     menu:
         "Intro":
             jump intro
@@ -108,15 +123,20 @@ label chapterMenu: # developer menu
             jump preTut
         "Starting point":
              jump endTutorial
+        "Double Mugging":
+            scene bg forest
+            jump doubleMugging
+        "Forest Clear":
+            $ forestCleared = True
+            jump endTutorial
         "Penguin King":
             jump penguinEncounter
-            
+        "Ending":
+            jump forestBaseDoor
 
     
 ############## The game starts here.
 label intro:    
-
-    play music "bg_music.mp3"
     scene bg black
     narrator "…"
     show headache
@@ -152,7 +172,8 @@ label observe:
     thinking brings immense pain.\n"
     scene bg moon at topright with quickFade
     narrator "You’re in the middle of a corn field. The corn provide little to no shelter from
-    the elements, but the bright lit moon gives you a clear vantage point of your surroundings.\n"
+    the elements, but the bright lit moon gives you a clear vantage point of your
+    surroundings.\n"
     scene bg forest with quickFade:
         xalign 0.5
     narrator "Just behind you is a dark forested area, with a old trodden path that leads you
@@ -199,7 +220,7 @@ label inspectSelf:
 ############### Tutorial Encounter 
 label preTut:
     scene bg cornfield
-    play sound "gust.mp3"
+    play sound "audio/gust.mp3"
     game "A sudden gust of wind blows, violently swaying the corn around me.
     To my surprise, the overgrowth reveals a stout looking man crouched over, hiding
     with a baseball bat."
@@ -210,11 +231,6 @@ label preTut:
     
 label tutorialEncounter:
     tut "H-H-hey, you there."
-    #scene bg park:
-    #    xalign 0.2
-    #scene bg park:
-    #    xpos  -0.3
-    #    easein 0.5 xpos -.8
     show tutMug normal
     tut "Ya you. G-gimme everything you've got"
     game "*Is this guy serious? He looks like he's only capable of mugging old ladies.
@@ -248,11 +264,12 @@ label tutTrick:
     something safer next time. You can keep your $[money]."
     player "Wait how do you know exaclty how much money I have on me"
     tut "You must not be from around here. E-E-everone in this town can smell m-m-m-money. 
-    I wonder if you can survive in this town. I wish you G-g-g-good luck"
+    I wonder if you'll survive. I wish you G-g-g-good luck"
     jump endTutorial
     
 label tutFight:
-    play sound "Witches_Laugh.mp3"
+    $ lost_bat = False
+    play sound "audio/Witches_Laugh.mp3"
     tut "Hahahahaha, Y-Y-You're in the wrong county if you didn't want any t-t-trouble"
     #rushing animation
     game "The man rushes you "
@@ -280,9 +297,21 @@ label tutFrighten:
     game "You continue to approach"
     tut "I-I-I m-mean it"
     game "You are withing arms reach of the man now"
-    tut "EEeya"
+    game "The man let's out a cry as he swings the bat towards you"
+    tut "AAARRRHH!"
+    game "You where able to block the swinging motion of the mans arms with your own."
+    game "You stuggle with each other over control of the bat but in a swift motion you
+    relinquish control of the bat and slam your body into the mans chest"
+    
+    show tutMug batless
+    game "As the man tumbles to the floor his grip on the bat weakens and the bat is sent
+    flying into the forest with astonishing speed."
+    
+    
+    game "The man, now defenseless, sprints of out of sight"
     hide tutMug
-    game "The man rans off"
+    game "As the man leaves you let out a small sigh of relief"
+    player "Glad I got rid of him"
     jump endTutorial
     
 label endTutorial:
@@ -290,10 +319,15 @@ label endTutorial:
     menu:
         game "You are still standing in the middle of a corn field. Where will you go?"
         "Forest":
+            if forestCleared:
+                jump forestContinuation
             jump forestEnterance
         "Into Town":
-            jump townEnterance
-    
+            if townCleared:
+                jump townContinuation
+            jump townEnterance  
+
+######################### Forest Enterance 
 label forestEnterance:
      scene bg forest with longFade
      narrator "Narration occurs describing the forest"
@@ -306,6 +340,7 @@ label forestEnterance:
      pause 0.75
      scene bg forest with wipeleft
      narrator "Narration new locations description. The old mugging trap spot"
+     show headache
      narrator "Narration of what you can infer from the location"
      narrator "Narration of suspitous activity causing you to think someone might be
      following you but you brush it off"
@@ -315,10 +350,14 @@ label forestEnterance:
      pause 0.75
      scene bg forest with blinds
      narrator "Narration of another possible old mugging trap spot"
+     show headache
      narrator "Narration of what you think happened here"
      nvl clear
      game "Thoughts of you connecting the dots and what possibly happened in the forest.
      (also Possible time range i.e. withing the last 24 hours)"
+     
+################# Double Mugging Encounter
+label doubleMuggingIntro:
      game "The prelude to a suprise attack"
      # Rash mugger appears centre screen
      game "Single mugger apearing"
@@ -337,22 +376,130 @@ label forestEnterance:
      doubleRash " wait don't give him your money give it to me"
    
 label doubleMugging:
+    $forestCleared = True
     menu:
         "you guys got me but I can't give my money to both of you":
-            jump endTutorial
+            jump dMugPass
         "Option 2":
-            jump endTutorial
+            jump dMugPass
         "Option 3":
-            jump endTutorial
+            jump dMugPass
         "None of you guys are getting anything":
+            jump dMugFail
+            
+label dMugPass:
+    game "The men are arguing amonst themselves. You hear them talk about the
+    ogrinization and how they were both breaking rules in there confrontation."
+    game "as they argue you start to slowly slip away into the forest behind you"
+    game "One of the men swings his knife at the other and they break out into a knife fight"
+    game "Not wanting to learn which man gets the honour of mugging you.
+    You hastily escape from the muggers and run of into the forest"
+    scene bg forest with quickFade
+    game "You keep runnning until you're sure you've created enough distance"
+    game "You expertly hide your tracks in a manner that suggests you have a lot of
+    experience running away from dangerous people"
+    game "After a few more minutes you begin to feel that you've succesfully escaped the
+    muggers and are not in any danger of being tracked"
+    jump forest
+    
+label dMugFail:
+    doubleStalker "Hah, there isn't any sense in keeping you alive if you're going to resist"
+    doubleRash "Hey, you're try to take all the money for yourself"
+    doubleStalker "You can go kill him then. We can argue about the money later"
+    # hide stalker mugger
+    doubleRash "Hahahaa"
+    game "The mugger rans at you with his knife laughing as he charges"
+    show deathFilter
+    show bloodSplatter at top
+    game "*Animation of the man the killing player*"
+    game ".:. Game Over"
+    return
+
+label forest:
+    scene bg white with squares
+    pause 0.75
+    scene bg forest with squares
+    narrator "You continue wandering through the forest, additional descriptions"
+    if lost_bat:
+        narrator "description of a loction in the forest. You find an object sticking out"
+        narrator "As you get closer you realize it's a base ball bat. And not just any baseball bat.
+        It was the baseBall bat the first mugger tried to use against you!"
+        narrator "With all these muggers in town you decide it's best to hold on to the bat."
+        # add bat to inventory
+    else:
+        narrator "you don't find anything else of particular interest as you walk through
+        the forest"
+    
+    nvl clear
+    scene bg white with quickFade
+    scene bg forest with quickFade
+    
+    narrator "As you begin to feel that you're approaching the end of the forest your eye
+    catches on an oddity near one fo the bushes"
+    narrator "It seems the bushes wouldn't naturaly form this way. What amazing preception
+    you must have in order to notice this irregularity."
+    nvl clear
+    
+    scene bg trap_door with quickFade
+    game  "You move the bushes aside to reveal a stone trapdoor behind the bushes"
+    jump forestBaseDoor
+        
+################# Forest Continuation
+label forestContinuation:
+         scene bg forest with longFade
+         narrator "Narration about walking back into the forest"
+         narrator "going through where you thought you went last time and after a few minutes
+         of uncertainty, you find your self back to the enterance of the base"
+         jump forestBaseDoor
+         
+label forestBaseDoor:
+    scene bg trap_door with quickFade
+    game "You approach the Door and notice the lock"
+    game "Looks like you won't be able to open this door unless you have a key."
+    game "Looking up you realise you also can't go any deeper into the forest"
+    menu:
+    #if inv.has("base_key"):
+        "use the iron key on the door" if True:
+            jump enteringBase
+        "Leave the forest":
+            #play sound ""
+            scene bg black with longFade
+            scene bg cornfield with quickFade
             jump endTutorial
-     
+        
+label enteringBase:
+    game "Narration of unlocking the door with the key you pull from your pockets and
+    opening it"
+    play sound "audio/stone_door.wav"
+    pause 0.65
+    
+    scene bg white with Dissolve(2.35)
+    narrator "You step through the open trap door"
+    nvl clear
+    
+    #For now
+    narrator "Thank you for playing Part 1 of Don't get mugged. We hope you enjoyed it."
+    narrator "Wait for Part 2 to complete the story."
+    return
+         
+######################### Town Enterance
 label townEnterance:
+    scene bg park with quickFade:
+        xalign 0.2
+    player "Let's take a look in the town"
+    scene bg park:
+        xpos  -0.3
+        easein 0.5 xpos -1.0
+    narrator "narration about walking past the sign in the directions of town"
+    nvl clear
     jump penguinEncounter
     
 ################# Penguin Encounter
 label penguinEncounter:
-    scene bg blank at right with dissolve    
+    scene bg city at right with longFade
+    narrator "Narration about the lights and city"
+    narrator "The feeling of walking throuhg this town before "
+    nvl clear
     pen "Who's there!"
     
     show penguin normal at center:
@@ -366,13 +513,15 @@ label penguinEncounter:
         "Your neighborhood? You mean MY neighborhood":
                 jump penguinDeath
                 
-        "I've heard of a great King in this neighborhood and had come to see if the legends where true ":
+        "I've heard of a great King in this neighborhood and had come to see if the legends
+        where true ":
                 jump penguinPass
                 
 label penguinMugging:
     
     $ money = 0
-    pen "Who do you think your are. Thinking you can enter my domain without paying a price."
+    pen "Who do you think your are. Thinking you can enter my domain without
+    paying a price."
     
     show deathFilter:
         alpha 0.3
@@ -386,15 +535,16 @@ label penguinMugging:
     pen "Don't come back here again"
     
     hide penguin
-    game "A minute after you see the Penguin King walk out of sight you move your hands under
-    your body to try and pick yourself of the street and onto your feet"
+    game "A minute after you see the Penguin King walk out of sight you move your hands
+    under your body to try and pick yourself of the street and onto your feet"
     game "The moment you begin pushing with your arms you feel strong surge of pain go
     through your body. You groan but somehow manage to get onto your two feet. After
     wobbling a few times you take inventory of what you still have on you.\n"
-    pen "The penguin King made sure to steal all the money you had on you but at least you still have
-    your shoes "
-    game ".:. Bad End"
-    return
+    pen "The penguin King made sure to steal all the money you had on you but at least you
+    still have your shoes "
+    
+    $ money = 0
+    jump penguinsDomain
     
 label penguinDeath:
     pen "You have a lot of nerve"
@@ -409,7 +559,8 @@ label penguinDeath:
 label penguinPass:
     pen "That's understandable, My greatness is so grand that it seems unbelievable"
     pen "Well, do you believe the legends now?"
-    player "The Legends don't do your grace justice. You're far more impressive a king in person"
+    player "The Legends don't do your grace justice. You're far more impressive a king in
+    person"
     pen "But of course."
    
     show penguin backwards:
@@ -423,6 +574,90 @@ label penguinPass:
     jump penguinsDomain
     
 label penguinsDomain:
-    game ".:. Good end"
-    return
-   
+    $ townCleared = True
+    narrator "You wait to make sure the [pen.name] is completely gone before moving"
+    narrator "Narration about going through the town"
+    
+    scene bg intersection at topleft with quickFade
+    narrator "Narration about encountering an intersection"
+
+########################## Intersection    
+label intersection:
+    narrator "looking around at nearby signs gives you indications of where they lead"
+    nvl clear
+    
+    menu:
+        game "Where road would you like to take?"
+        
+        "The path that leads to the ice cream shop":
+            jump discoKnightIntro
+                
+        "The path that leads to the prisoner":
+            jump prisonerIntro
+            
+        "Head back to the cornfield":
+            jump endTutorial    
+    
+################# Town Continuation
+label townContinuation:
+    scene bg city at right with longFade
+    narrator "Narration about traveling back through the penguins domain"
+    narrator "Voice your thougts about hoping he doesn't come back"
+    scene bg intersection at topleft with longFade
+    narrator "Narration of reaching the intersection and being glad that you arrived safely"
+    nvl clear
+    jump intersection
+
+label prisonerIntro:
+    scene bg white with wipeleft
+    pause 0.75
+    scene bg pris_road with wipeleft
+    narrator "narration of walking down the road and how bleak this aread look even
+    though it's well lit"
+    narration "Description of one door with a rusted lock that you notice as you walk by"
+    nvl clear
+    
+    # quiet sound
+    pause 0.3
+    game "description of the sound you hear"
+    player "Is anyone there?"
+    # louder sound
+    pause 0.3
+    game "description of the sound made form the man on the other side of the door
+    aproching the door"
+    prisoner "Yes, I'm trapped in here you have to help me get out"
+    player "expersses skeptecism of trusting someone after what you've been through"
+    prisoner "Their the ones that trapped me in here"
+    prisoner "I was working against the organization and they caught me. Then they threw me
+    in here while they went to talk to the higher ups of what to do with me"
+    prisoner "The lower ranked members are very disorginized so they won't be able to figure
+    out what to do with me for a while, but they'll defenitley be back before the sun comes up"
+    prisoner "You might be the only one who can get me out of here"
+    
+    player "you ask about the orginization"
+    prisoner "Prisoner explains how the orginization works"
+    prisoner "So will you get me out of here now"
+    
+    player "Hold on, let me see if I can find anything here to break the lock"
+    game "The lock is made of iron and there would be no way for you to break it ordinarily,
+    but it's rusted over"
+    game "You might be able to break it if you find something that can help deliever a powerful
+    blow to the lock"
+    
+    scene bg pris_road with quickFade
+    game "you look around for several minutes and see that there is nothing here that
+    can help you break the lock"
+    player "I... I couldn't find anything that would be strong enough to break the lock"
+    prisoner "Damn it!"
+    prisoner "I already knew I was a gonner once they caught me."
+    prisoner "But this isn't the end. There were others working with me, fighting the 
+    organization."
+    prisonet "One of use managed "
+    
+    
+label discoKnightIntro:
+    scene bg white with wiperight
+    pause 0.75
+    scene bg pris_road with wiperight
+  
+
