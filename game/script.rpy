@@ -1,26 +1,38 @@
-﻿# Create specail transitions
+﻿init python:
+    import time
+
+# Create special transitions
 define updownTransHelper = ComposeTransition(slideup,
     after=Fade(0.4, 0.35, 0.6, color="#00001a"))
 define updownTrans = ComposeTransition(slideawayup,
     before = Fade(0.4, 0.35, 1.0, color="#00001a"), after=updownTransHelper)
 
 define quickFade = Fade(0.5, 0.2, 0.5)
-
+define longFade = Fade(1, 1, 1)
+define shakeScreen = ComposeTransition(vpunch, before=hpunch)
+    
 # Define npc characters used by this game.
 # Penguin King
 define pen = Character('Penguin King', color="#c8ffc8")
 image penguin normal = "penguin_Looking_Left.png"
 image penguin backwards = "turned_around_penguin"
 # Tutorial character
-define tut = Character("some guy", color ="#a22342" )
+define tut = Character("Nervous Man", color ="#a22342" )
 image tutMug normal:
     "lousy_mugger.png"
     zoom 0.7
     yalign 0.48
-image tutMug batless:
+image tutMug shocked:
     "batless_other_mugger.png"
     zoom 0.7
     yalign 0.48
+image tutMug batless:
+    "batless_mugger.png"
+    zoom 0.7
+    yalign 0.48
+# Double mugging rash character
+define doubleRash = Character('Mugger', color="#c8f4d8")
+define doubleStalker = Character('Stalker', color="#2ce438")
 # Define text baised characters
 define narrator = Character(None, kind=nvl)
 define game = Character(None, color="#e8ffe8")
@@ -28,7 +40,7 @@ define player = Character(None, color="#c8c8c8")
 define player_nar = Character(None, kind=nvl, color="#c231d4")
  
 # background images
-image bg blank:
+image bg city:
     "empty_Street.png"
     zoom 0.18
 image bg park:
@@ -50,8 +62,13 @@ image bg sky:
 image bg money:
     "money_screen.png"
     zoom 1.5
+image bg trap_door:
+    "trap_door.jpg"
+    zoom 1.6
 image bg black = "black_screen.png"
 image bg brown = "brown_screen.png"
+image bg white = "white_screen.png"
+image bg gray = "gray_screen.png"
 
 # Effect images
 image headache:
@@ -77,6 +94,16 @@ image bloodSplatter:
         #zoom .6
     alpha 0.6
 
+    
+init:
+    # create Varaibles
+    $ money = 18.41  
+    $ observed = False
+    $ inspected = False
+    $ forestCleared = False
+    $ townCleared = False
+    $ lost_bat = True
+    
 label start:
     jump chapterMenu
 label chapterMenu: # developer menu
@@ -85,21 +112,21 @@ label chapterMenu: # developer menu
             jump intro
         "tutorialEncounter":
             jump preTut
+        "Starting point":
+             jump endTutorial
         "Penguin King":
             jump penguinEncounter
-            
+        "Ending":
+            jump forestBaseDoor
+
+    
 ############## The game starts here.
 label intro:    
-    # create Varaibles
-    $ money = 18.41  
-    $ observed = False
-    $ inspected = False
 
     play music "bg_music.mp3"
     scene bg black
     narrator "…"
     show headache
-    narrator "*Pounding headache 'flinch'*"
     player_nar "Urgh… where I am?"
     nvl clear
     
@@ -113,13 +140,12 @@ label intro:
     game "Slowly, using your weak arms to push yourself upright, you gather your thoughts
     and attempt to recall how you arrived at this state."    
     show headache
-    game "*Pounding headache 'flinch'*"
     player "I don’t remember a goddamned thing about myself..."
  
 label firstChoice:
     scene bg cornfield
     if observed and inspected:
-        player "It's time to head to town"
+        pause
         jump preTut 
     menu:
         "{b}Observe your surroundings{/b}" if not observed:
@@ -179,63 +205,225 @@ label inspectSelf:
     
 ############### Tutorial Encounter 
 label preTut:
-    scene bg park:
-        xalign 0.2
-    narrator "You had a long day at work.\n ...\nIt's now several hours past midnight\n
-    ...\n \n*more narration*\n \n..."
-    narrator "The roads are Dark and Dangerous\nAnd now you have to get home.\n"
-    narrator "Try not to get mugged."
-    nvl clear
+    scene bg cornfield
+    play sound "gust.mp3"
+    game "A sudden gust of wind blows, violently swaying the corn around me.
+    To my surprise, the overgrowth reveals a stout looking man crouched over, hiding
+    with a baseball bat."
+    
+    show tutMug normal
+    game "Realizing that his cover is blown, the man slowly steps out from his hiding
+    spot and approaches you, bat held in an awkward striking stance."
     
 label tutorialEncounter:
     tut "H-H-hey, you there."
-    scene bg park:
-        xpos  -0.3
-        easein 0.5 xpos -.8
     show tutMug normal
     tut "Ya you. G-gimme everything you've got"
-    game "*Is this guy serious? He looks like he's only capable of mugging old ladies. But still
-    getting hit by that baseball bat looks like troublesome.*"
+    game "*Is this guy serious? He looks like he's only capable of mugging old ladies.
+    Still, it would be quite troublesome getting hit by that bat.*"
 
 label tutorialChoice:
     menu:
         "Drop the bat, before you hurt yourself":
-            jump endTutorial
+            jump tutTrick
         "Look man, I don't want any trouble":
-            play sound "Witches_Laugh.mp3"
-            tut "Hahahahaha, Y-Y-You're in the wrong county if you didn't want any t-t-trouble"
-            #rushing animation
-            game "The man rushes you "
-            # move and shake camera
-            game "You roll to the side and manage to get out of the way before the bat strikes the
-            ground where you were just standing. The man staggers from the recoil of the bat.
-            As your feet touch the ground you spring onto the now vulerable man."
-            #toppled man
-            show tutMug batless
-            game "You miss judged the distance and the man is able to back off before you can
-            knock him to the ground. He immediately regains his balance and.... runs away."
-            hide tutMug
-            
-            game "You catch your breath and look at the baseball bat he left behind.  There is a
-            crack running down the center of the bat making it completely useless. Suprised you
-            walk over to it to get a closer look."
-            game "Upon inspection you notice that the there is strudy rock in the location
-            where the man stuck the ground surrounded by tiny wooden splinters. It seems you
-            lucked out this time but you should be catious. In the future you might not
-            get a second chance."
-            jump penguinEncounter
+            jump tutFight
         "*Approach the man menacingly*":
-            jump endTutorial
-        
-label endTutorial:
-    tut "Y-You've some how convinved me not to m-m-mug you. You can keep your $[money]"
+            jump tutFrighten
+
+            
+label tutTrick:
+    tut "W-w-whaddaya mean, hurt myself?"
+    player "You don’t know? Approximately one out of ten people hurt themselves holding onto
+    a baseball bat. Every minute, a person dies from blunt trauma to the head from a flying bat.
+    In 1946, the NSA deemed the bat ‘The second most dangerous household object’, after
+    the portable guillotine, of course."
+    player "If you’re not careful with that death machine, you might even end up…"
+    player "*You pause dramatically*"
+    player "...DEAD" with hpunch
+    tut "Whaaaaaaa!!! Get this deathtrap away from me!"
+    hide tutMug
+    game "With a start, the man tosses the bat into the air, whizzing through the trees before
+    disappearing into the dark forest."
+    show tutMug batless
+    tut "T-t-thank you for saving me from that terrible thing. I’ll make sure to use
+    something safer next time. You can keep your $[money]."
     player "Wait how do you know exaclty how much money I have on me"
     tut "You must not be from around here. E-E-everone in this town can smell m-m-m-money. 
-    I wonder if you can survive in this town. I wish you G-g-g-good luck"
+    I wonder if you'll survive. I wish you G-g-g-good luck"
+    jump endTutorial
+    
+label tutFight:
+    $ lost_bat = False
+    play sound "Witches_Laugh.mp3"
+    tut "Hahahahaha, Y-Y-You're in the wrong county if you didn't want any t-t-trouble"
+    #rushing animation
+    game "The man rushes you "
+    #scene bg cornfield with 
+    game "You roll to the side and manage to get out of the way before the bat strikes the
+    ground where you were just standing. The man staggers from the recoil of the bat.
+    As your feet touch the ground you spring onto the now vulerable man."
+    #toppled man
+    show tutMug shocked
+    game "You miss judged the distance and the man is able to back off before you can
+    knock him to the ground. He immediately regains his balance and.... runs away."
+    hide tutMug
+            
+    game "You catch your breath and look at the baseball bat he left behind.  There is a
+    crack running down the center of the bat making it completely useless. Suprised you
+    walk over to it to get a closer look."
+    game "Upon inspection you notice that the there is a strudy rock in the location
+    where the man stuck the ground surrounded by tiny wooden splinters. It seems you
+    lucked out this time but you should be catious. In the future you might not
+    get a second chance."
+    jump endTutorial
+
+label tutFrighten:
+    tut "D-D-Don’t come any closer! I’ll club ya tah death!"
+    game "You continue to approach"
+    tut "I-I-I m-mean it"
+    game "You are withing arms reach of the man now"
+    game "The man let's out a cry as he swings the bat towards you"
+    tut "AAARRRHH!"
+    game "You where able to block the swinging motion of the mans arms with your own."
+    game "You stuggle with each other over control of the bat but in a swift motion you
+    relinquish control of the bat and slam your body into the mans chest"
+    
+    show tutMug batless
+    game "As the man tumbles to the floor his grip on the bat weakens and the bat is sent
+    flying into the forest with astonishing speed."
+    
+    
+    game "The man, now defenseless, sprints of out of sight"
+    hide tutMug
+    game "As the man leaves you let out a small sigh of relief"
+    player "Glad I got rid of him"
+    jump endTutorial
+    
+label endTutorial:
+    scene bg cornfield
+    menu:
+        game "You are still standing in the middle of a corn field. Where will you go?"
+        "Forest":
+            if forestCleared:
+                jump forestContinuation
+            jump forestEnterance
+        "Into Town":
+            if townCleared:
+                jump townContinuation
+            jump townEnterance  
+
+######################### Forest Enterance 
+label forestEnterance:
+     scene bg forest with longFade
+     narrator "Narration occurs describing the forest"
+     narrator "Naration of you walking into the forest and"
+     narrator "Narration of being in the forest"
+     narrator "Narration of moving to a new location"
+     nvl clear
+     
+     scene bg white with wipeleft
+     pause 0.75
+     scene bg forest with wipeleft
+     narrator "Narration new locations description. The old mugging trap spot"
+     show headache
+     narrator "Narration of what you can infer from the location"
+     narrator "Narration of suspitous activity causing you to think someone might be
+     following you but you brush it off"
+     nvl clear
+     
+     scene bg white with blinds
+     pause 0.75
+     scene bg forest with blinds
+     narrator "Narration of another possible old mugging trap spot"
+     show headache
+     narrator "Narration of what you think happened here"
+     nvl clear
+     game "Thoughts of you connecting the dots and what possibly happened in the forest.
+     (also Possible time range i.e. withing the last 24 hours)"
+     game "The prelude to a suprise attack"
+     # Rash mugger appears centre screen
+     game "Single mugger apearing"
+     doubleRash "Threating dialouge"
+     doubleRash "Muggin dialouge"
+     game "susicious sounds from before"
+     doubleRash "Huh, What's that?"
+     # move the Rash mugger to the far right of the screen 
+     game "You turn to the source of the sound and the second mugger comes from his
+     hiding spot"
+     # stalker mugger appears on the far left of the screen
+     doubleStalker "Hold it."
+     doubleStalker "Explains how he was following you to see if you would lead him to any
+     other objects of value before muggin you but now his plan is ruined"
+     doubleStalker "But that's okay I won't take your life, if you give me all the money you have"
+     doubleRash " wait don't give him your money give it to me"
+   
+label doubleMugging:
+    $forestCleared = True
+    menu:
+        "you guys got me but I can't give my money to both of you":
+            jump endTutorial
+        "Option 2":
+            jump endTutorial
+        "Option 3":
+            jump endTutorial
+        "None of you guys are getting anything":
+            jump endTutorial
+
+################# Forest Continuation
+label forestContinuation:
+         scene bg forest with longFade
+         narrator "Narration about walking back into the forest"
+         narrator "going through where you thought you went last time and after a few minutes
+         of uncertainty, you find your self back to the enterance of the base"
+         jump forestBaseDoor
+         
+label forestBaseDoor:
+    scene bg trap_door with quickFade
+    game "You approach the Door "
+    game "Looks like you won't be able to open this door unless you have a key. Where could
+    it be?"
+    menu:
+    #if inv.has("base_key"):
+        "use the iron key on the door" if True:
+            jump enteringBase
+        "Leave the forest":
+            scene bg black with dissolve
+            jump endTutoriale
+        
+label enteringBase:
+    game "Narration of unlocking the door with the key you pull from your pockets and
+    opening it"
+    play sound "stone_door.wav"
+    pause 1.5
+    
+    scene bg white with dissolve
+    narrator "You step through the open trap door"
+    nvl clear
+    
+    #For now
+    narrator "Thank you for playing Part 1 of Don't get mugged. We hope you enjoyed it."
+    narrator "Wait for Part 2 to complete the story."
+    return
+         
+######################### Town Enterance
+label townEnterance:
+    scene bg park with quickFade:
+        xalign 0.2
+    player "Let's take a look in the town"
+    scene bg park:
+        xpos  -0.3
+        easein 0.5 xpos -1.0
+    narrator "narration about walking past the sign in the directions of town"
+    nvl clear
+    jump penguinEncounter
     
 ################# Penguin Encounter
 label penguinEncounter:
-    scene bg blank at right with dissolve    
+    scene bg city at right with longFade
+    narrator "Narration about the lights and city"
+    narrator "The feeling of walking throuhg this town before "
+    nvl clear
     pen "Who's there!"
     
     show penguin normal at center:
@@ -276,6 +464,8 @@ label penguinMugging:
     wobbling a few times you take inventory of what you still have on you.\n"
     pen "The penguin King made sure to steal all the money you had on you but at least you still have
     your shoes "
+    
+    $ money = 0
     game ".:. Bad End"
     return
     
@@ -308,4 +498,6 @@ label penguinPass:
 label penguinsDomain:
     game ".:. Good end"
     return
-   
+    
+################# Town Continuation
+label townContinuation:    

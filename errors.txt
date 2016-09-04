@@ -2,8 +2,8 @@
 errors listed below, and try again.
 
 
-File "game/script.rpy", line 3: invalid syntax
-    ComposeTransition(slideawayup, before = Fade(0.4, 0.35 0.5), after=sometrans)
-                                                              ^
+File "game/script.rpy", line 65: expected statement.
+    iamge bg trap_door = "trap_door.jpg"
+                       ^
 
 Ren'Py Version: Ren'Py 6.99.10.1227

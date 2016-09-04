@@ -1,3 +1,4 @@
+
 August 20th
 - Concept created
 - learned Ren'py basics to creating a VN -> 1 hour 30 min
@@ -22,15 +23,29 @@ August 24th
     Faruk designed the Colenal sanders encounter (30 minutes)
 - Creating introduction scenes of VN (excluding inventory intro)<- 2 hours
 
-August 24th
+August 25th
 - typo.txt created
 - added transitions to the intro (1 hour on one) <- 1 hour, 15 minutes
 - refinined the introduction <- 1 hour 30 minutes
 - Developer Chapter menu added <- 15 minutes
 - Creating new images <- 45 minutes
+- Created narrative for additional encounters and fleshed out existing ones.
+    Additionally formated narrative document <- 2 hours 30 minutes
+    
+August 27th
+- encounter ideas and disscusion (Disco night and thug train) <- 20 minutes
+
+August 29th
+- discovered severeal tutorials for Ren'py
+
+September 3rd
+- Created Forest scenes with Image and text Place holders <- 2 hours
+- Created Flowchart of events <- 1 hour
+- Created starting town sections with place holders <- 2 hours
+
 
 Tasks to complete
-- Create story ( What happened to the main character, Conclusion)
+- Create story (Conclusion)
 - additional encounter
 - Inventory mechinism
 - Encounter Animaitions
