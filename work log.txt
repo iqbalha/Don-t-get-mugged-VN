@@ -43,12 +43,32 @@ September 3rd
 - Created Flowchart of events <- 1 hour
 - Created starting town sections with place holders <- 2 hours
 
+September 3rd
+- Created Game ending with place holders <- 2 hours
+- Additional Music and Dev menu update <- 1 hour
+- Forest second section with place holders <- 1 hour
+
 
 Tasks to complete
-- Create story (Conclusion)
-- additional encounter
+
+- prisioner section
+- ice cream store section
+
+- Disco night encounter
+- colenal sanders encounter
+- rabbit encounter section
+
+- Double mugging encounter completion
+- Disco night completion
+- colenal sanders completion
+- ice cream store completion
+- rabbit encounter completion
+
 - Inventory mechinism
 - Encounter Animaitions
 - Sounds effects
 - Chat Style per person -> player thought and speach different colours
 - Interface style -> menu option colours to non-black 
+- title screen, Game name
+
+- (OP) Create story's Conclusion

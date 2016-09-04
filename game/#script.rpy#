@@ -570,8 +570,14 @@ label penguinPass:
     
 label penguinsDomain:
     $ townCleared = true
-    narrator ""
+    narrator "You wait to make sure the [pen.name] is completely gone before moving"
+    narrator "Narration about going through the town"
+    
     scene bg intersection with quickFade
+    narrator "Narration about encountering an intersection"
+    narrator "looking around at nearby signs gives you indications of where they lead"
+    
+    
     
 ################# Town Continuation
 label townContinuation:    

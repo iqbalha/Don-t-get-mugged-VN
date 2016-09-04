@@ -1,38 +1,20 @@
 ﻿I'm sorry, but an uncaught exception occurred.
 
 While running game code:
-  File "game/script.rpy", line 396, in script
-    play sound creaking_door.wav
-  File "renpy/common/000statements.rpy", line 238, in execute_play_sound
-    renpy.sound.play(_audio_eval(p["file"]),
-  File "renpy/common/000statements.rpy", line 30, in _audio_eval
-    return eval(expr, locals=store.audio.__dict__)
-  File "game/script.rpy", line 396, in <module>
-    play sound creaking_door.wav
-NameError: name 'creaking_door' is not defined
+  File "game/script.rpy", line 373, in script
+    jump dMugPass
+ScriptError: could not find label 'dMugPass'.
 
 -- Full Traceback ------------------------------------------------------------
 
 Full traceback:
-  File "game/script.rpy", line 396, in script
-    play sound creaking_door.wav
-  File "C:\Users\haris\Documents\renpy-6.99.10-sdk\renpy\ast.py", line 1697, in execute
-    self.call("execute")
-  File "C:\Users\haris\Documents\renpy-6.99.10-sdk\renpy\ast.py", line 1715, in call
-    return renpy.statements.call(method, parsed, *args, **kwargs)
-  File "C:\Users\haris\Documents\renpy-6.99.10-sdk\renpy\statements.py", line 144, in call
-    return method(parsed, *args, **kwargs)
-  File "renpy/common/000statements.rpy", line 238, in execute_play_sound
-    renpy.sound.play(_audio_eval(p["file"]),
-  File "renpy/common/000statements.rpy", line 30, in _audio_eval
-    return eval(expr, locals=store.audio.__dict__)
-  File "C:\Users\haris\Documents\renpy-6.99.10-sdk\renpy\python.py", line 1606, in py_eval
-    return py_eval_bytecode(code, globals, locals)
-  File "C:\Users\haris\Documents\renpy-6.99.10-sdk\renpy\python.py", line 1601, in py_eval_bytecode
-    return eval(bytecode, globals, locals)
-  File "game/script.rpy", line 396, in <module>
-    play sound creaking_door.wav
-NameError: name 'creaking_door' is not defined
+  File "game/script.rpy", line 373, in script
+    jump dMugPass
+  File "C:\Users\haris\Documents\renpy-6.99.10-sdk\renpy\ast.py", line 1520, in execute
+    rv = renpy.game.script.lookup(target)
+  File "C:\Users\haris\Documents\renpy-6.99.10-sdk\renpy\script.py", line 843, in lookup
+    raise ScriptError("could not find label '%s'." % str(original))
+ScriptError: could not find label 'dMugPass'.
 
 Windows-8-6.2.9200
 Ren'Py 6.99.10.1227
