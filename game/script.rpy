@@ -1,4 +1,32 @@
-﻿# Create special transitions
+﻿# create inventory and item's
+init python:
+    class Item:
+        def __init__(self, name, description):
+            self.name = name
+            self.des = description
+
+    class Inventory:
+        def __init__(self, money=0):
+            self.money = money
+            self.items = []
+
+        def setMoney(self, money):
+            self.money = money
+            
+        def addItem(self, item):
+            self.items.append(item)
+                
+        def hasItem(self, item):
+            if item in self.items:
+                return True
+            return False
+     
+    # All items in the game
+    inv = Inventory()
+    bat = Item("Baseball Bat", "")
+    base_key = Item("Old Iron Key", "")
+
+# Create special transitions
 define updownTransHelper = ComposeTransition(slideup,
     after=Fade(0.4, 0.35, 0.6, color="#00001a"))
 define updownTrans = ComposeTransition(slideawayup,
@@ -29,7 +57,15 @@ image tutMug batless:
     yalign 0.48
 # Double mugging rash character
 define doubleRash = Character('Mugger', color="#c8f4d8")
+image x2Rash angry:
+    "angry_man_with_knife.png"
+    zoom 0.5
+    yalign 0.65
 define doubleStalker = Character('Stalker', color="#2ce438")
+image x2Calm normal:
+    "calm_man_with_knife.png"
+    zoom 0.18
+    yalign 0.60
 # Ally
 define unknown = Character("?????")
 define prisoner = Character('Prisoner',  color="#7d5e54")
@@ -74,6 +110,16 @@ image bg intersection:
 image bg pris_road:
     "prisoner_road.jpg"
     zoom 2.6
+image bg by_icecream:
+    "outside_alley.jpg"
+    zoom 1.6
+    yalign 0.0
+image bg icecream_store:
+    "store.jpg"
+    zoom 2.6
+image bg alley:
+    "alley.jpg"
+    zoom 0.9
 image bg black = "black_screen.png"
 image bg brown = "brown_screen.png"
 image bg white = "white_screen.png"
@@ -112,6 +158,10 @@ init:
     $ forestCleared = False
     $ townCleared = False
     $ lost_bat = True
+    $ informed = False
+    $ escaped = False
+    $ disco = False
+    $ sanders = False
     
 label start:
     stop music fadeout 2.0
@@ -128,12 +178,14 @@ label chapterMenu: # developer menu
              jump endTutorial
         "Double Mugging":
             scene bg forest
-            jump doubleMugging
+            jump doubleMuggingIntro
         "Forest Clear":
             $ forestCleared = True
             jump endTutorial
         "Penguin King":
             jump penguinEncounter
+        "Intersection":
+            jump intersection
         "Ending":
             jump forestBaseDoor
 
@@ -363,16 +415,21 @@ label forestEnterance:
 ################# Double Mugging Encounter
 label doubleMuggingIntro:
      game "The prelude to a suprise attack"
-     # Rash mugger appears centre screen
+     show x2Rash angry
      game "Single mugger apearing"
      doubleRash "Threating dialouge"
      doubleRash "Muggin dialouge"
      game "susicious sounds from before"
      doubleRash "Huh, What's that?"
-     # move the Rash mugger to the far right of the screen 
+     hide x2Rash
+     show x2Rash angry:
+         xalign 0.5
+         linear 0.35 xalign 1.0
      game "You turn to the source of the sound and the second mugger comes from his
      hiding spot"
-     # stalker mugger appears on the far left of the screen
+
+     show x2Calm normal:
+         xalign 0.0
      doubleStalker "Hold it."
      doubleStalker "Explains how he was following you to see if you would lead him to any
      other objects of value before muggin you but now his plan is ruined"
@@ -410,7 +467,9 @@ label dMugFail:
     doubleStalker "Hah, there isn't any sense in keeping you alive if you're going to resist"
     doubleRash "Hey, you're try to take all the money for yourself"
     doubleStalker "You can go kill him then. We can argue about the money later"
-    # hide stalker mugger
+    hide x2Calm
+    show x2Rash angry:
+        xalign 0.5
     doubleRash "Hahahaa"
     game "The mugger rans at you with his knife laughing as he charges"
     show deathFilter
@@ -429,7 +488,8 @@ label forest:
         narrator "As you get closer you realize it's a base ball bat. And not just any baseball bat.
         It was the baseBall bat the first mugger tried to use against you!"
         narrator "With all these muggers in town you decide it's best to hold on to the bat."
-        # add bat to inventory
+        python:
+            inv.addItem(bat)
     else:
         narrator "you don't find anything else of particular interest as you walk through
         the forest"
@@ -462,8 +522,7 @@ label forestBaseDoor:
     game "Looks like you won't be able to open this door unless you have a key."
     game "Looking up you realise you also can't go any deeper into the forest"
     menu:
-    #if inv.has("base_key"):
-        "use the iron key on the door" if True:
+        "use the iron key on the door" if inv.hasItem(base_key):
             jump enteringBase
         "Leave the forest":
             #play sound ""
@@ -492,8 +551,8 @@ label townEnterance:
         xalign 0.2
     player "Let's take a look in the town"
     scene bg park:
-        xpos  -0.3
-        easein 0.5 xpos -1.0
+        xalign 0.2
+        easein 0.7 xpos -0.6
     narrator "narration about walking past the sign in the directions of town"
     nvl clear
     jump penguinEncounter
@@ -587,6 +646,7 @@ label penguinsDomain:
 
 ########################## Intersection    
 label intersection:
+    scene bg intersection at topleft
     narrator "looking around at nearby signs gives you indications of where they lead"
     nvl clear
     
@@ -594,9 +654,13 @@ label intersection:
         game "Which road would you like to take?"
         
         "The path that leads to the ice cream shop":
+            if disco:
+                jump afterDisco
             jump discoKnightIntro
                 
         "The path that leads to the prisoner":
+            if informed:
+                jump prisonerRepeat
             jump prisonerIntro
             
         "Head back to the cornfield":
@@ -640,28 +704,108 @@ label prisonerIntro:
     
     player "you ask about the orginization"
     prisoner "Prisoner explains how the orginization works"
-    prisoner "So will you get me out of here now"
+    prisoner "about the people fighting against them and his capture"
+    prisoner "But this isn't the end. There were others in my unit here last night"
+    prisoner "I don't know where they've gone now but I hope they are all okay."
+    prisoner "One of us managed to steal the key to their base of operations and got away"
+    prisoner "So will you get me out of here now?"
     
     player "Hold on, let me see if I can find anything here to break the lock"
     game "The lock is made of iron and there would be no way for you to break it ordinarily,
     but it's rusted over"
     game "You might be able to break it if you find something that can help deliever a powerful
     blow to the lock"
+    $ informed = True
     
-    scene bg pris_road with quickFade
-    game "you look around for several minutes and see that there is nothing here that
-    can help you break the lock"
-    player "I... I couldn't find anything that would be strong enough to break the lock"
-    prisoner "Damn it!"
-    prisoner "I already knew I was a gonner once they caught me."
-    prisoner "But this isn't the end. There were others working with me, fighting the 
-    organization."
-    prisonet "One of use managed "
+    if not inv.hasItem(bat):
+        $ informed = True
+        scene bg pris_road with quickFade
+        game "you look around for several minutes and see that there is nothing here that
+        can help you break the lock"
+        player "I... I couldn't find anything that would be strong enough to break the lock"
+        prisoner "Damn it!"
+        player "I'm sorry I can't get you out"
+        prisoner "It's alright, I already knew I was a gonner once they caught me."
+        prisoner "You should leave before anyone else comes by"
+        game "You leave the man and make your way back to the intersection"
+        jump intersection
+    jump prisonerEscape
+ 
+label prisonerEscape:
+    $ Escaped = True
+    game "You take out the base ball bat and smash the lock of the door"
+    # TO-DO Escape scene
+    jump intersection
+
+label prisonerRepeat:
+    if escaped:
+        scene bg white with wipeleft
+        pause 0.5
+        scene bg pris_road with wipeleft
+        narrator "Narration of walking down the same road and nothing of interest happening"
+        nvl clear
+        jump intersection
+        
+    elif not inv.hasItem(bat):
+        game "There is no point going down that road unless you can find something to free the
+        trapped man with first."
+        jump intersection
     
-    
+    scene bg white with wipeleft
+    pause 0.75
+    scene bg pris_road with wipeleft
+    narrator "Narration of walking back down the street you came earlier and retracing your
+    steps to arrive at the door where the man is trapped behind"
+    nvl clear
+    prisoner "Who's there"
+    player "It's me, I found a way to get you out"
+    prisoner "Great, let's do this quick"
+    jump prisonerEscape
+
 label discoKnightIntro:
     scene bg white with wiperight
     pause 0.75
     scene bg pris_road with wiperight
-  
+    $ disco = True
+    narrator "Disco Knight Encounter here"
+    nvl clear
+    
+label afterDisco:
+    scene bg by_icecream
+    menu:
+        "Alley by the Ice cream store" if not sanders:
+            jump KFC
+        "Enter the iceCream store" if not inv.hasItem(base_key):
+            jump iceCreamStore
+        "Back to the intersection":
+            jump intersection
 
+label iceCreamStore:
+    scene icecream_store with quickFade
+    game "Narration of entering the store"
+    show headache
+    show headache
+    player "Complaing about the pain"
+    game "This place seems really familiar etc..."
+    game "walking through the storejust searching around"
+    show headache
+    game "This pain seems to be caused from walking past a certain area"
+    game "you go to investigate the area"
+    show headache
+    player "There is somehting here I know it"
+    game  "disables the hiding spot and locates a key"
+    player "what's this?"
+    python:
+        inv.addItem(base_key)
+   
+    game "pick up the key and place it in your pockets"
+    show headache
+    player "Arghh, I better get out of here"
+    jump afterDisco
+    
+label KFC:
+    scene bg alley with quickFade
+    $ sanders = True
+    narrator "Colonal Sanders encounter here"
+    nvl clear
+    jump afterDisco

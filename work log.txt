@@ -43,16 +43,17 @@ September 3rd
 - Created Flowchart of events <- 1 hour
 - Created starting town sections with place holders <- 2 hours
 
-September 3rd
+September 4th
 - Created Game ending with place holders <- 2 hours
 - Additional Music and Dev menu update <- 1 hour
 - Forest second section with place holders <- 1 hour
+- prisoner and intersection section with place holders <- 2 hours
+- inventory system <- 1 hour
+- imagework for double mugging and icecream store <- 1 hour
+- ice cream store scection <- 1 hour
 
 
 Tasks to complete
-
-- prisioner section
-- ice cream store section
 
 - Disco night encounter
 - colenal sanders encounter
@@ -64,7 +65,7 @@ Tasks to complete
 - ice cream store completion
 - rabbit encounter completion
 
-- Inventory mechinism
+- Inventory visuals
 - Encounter Animaitions
 - Sounds effects
 - Chat Style per person -> player thought and speach different colours
