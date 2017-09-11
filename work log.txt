@@ -1,4 +1,3 @@
-
 August 20th
 - Concept created
 - learned Ren'py basics to creating a VN -> 1 hour 30 min
@@ -51,6 +50,36 @@ September 4th
 - inventory system <- 1 hour
 - imagework for double mugging and icecream store <- 1 hour
 - ice cream store scection <- 1 hour
+
+September 5th
+- Play tested the game with the 3 members <- 1 hour 30 minutes
+- fixed most bugs, typos, etc... and added bugs.txt <- 1 hour
+
+September 6th
+- Typos throughout the entire script < 1 hour 30 minutes 
+
+September 12th - 19th
+- Learning the screens tools of ren'py <- 2 hour
+- Discovering places for advanced documentation for ren'py  <- 1 hour
+
+September 22rd-23nd
+- Writing for the forest narration section (This is the prelude to
+    the Double mugging and is included in that) <- 5 hours
+    
+September 26th
+- some writing here
+
+Novemeber 23rd
+- Group Work <- 2 hours 30 minutes
+    Chris Worked on editing the narrative
+    Haris Finished options 1,2 for the double mugging encounter
+- Richard Working on drawing Disco knight <- X hours
+    ^- contour drawing complete. needs colouring 
+
+Decemember 28th
+- Applying changes from the narrative onto script.rpy  <- 4 hours
+    (And creating the animation for the scenes that require them)
+- Added indentation as prefix to narrator
 
 
 Tasks to complete

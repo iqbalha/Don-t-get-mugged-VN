@@ -1,29 +1,21 @@
 ﻿I'm sorry, but an uncaught exception occurred.
 
 While running game code:
-  File "game/script.rpy", line 414, in script
-    show x2Rash angry at centerright
-  File "game/script.rpy", line 414, in <module>
-    show x2Rash angry at centerright
-NameError: name 'centerright' is not defined
+  File "game/script.rpy", line 729, in script
+    pleyer_nar "This bat couldn’t have…"
+Exception: Sayer 'pleyer_nar' is not defined.
 
 -- Full Traceback ------------------------------------------------------------
 
 Full traceback:
-  File "game/script.rpy", line 414, in script
-    show x2Rash angry at centerright
-  File "C:\Users\haris\Documents\renpy-6.99.10-sdk\renpy\ast.py", line 1065, in execute
-    show_imspec(self.imspec, atl=getattr(self, "atl", None))
-  File "C:\Users\haris\Documents\renpy-6.99.10-sdk\renpy\ast.py", line 1026, in show_imspec
-    at_list = [ renpy.python.py_eval(i) for i in at_list ]
-  File "C:\Users\haris\Documents\renpy-6.99.10-sdk\renpy\python.py", line 1606, in py_eval
-    return py_eval_bytecode(code, globals, locals)
-  File "C:\Users\haris\Documents\renpy-6.99.10-sdk\renpy\python.py", line 1601, in py_eval_bytecode
-    return eval(bytecode, globals, locals)
-  File "game/script.rpy", line 414, in <module>
-    show x2Rash angry at centerright
-NameError: name 'centerright' is not defined
+  File "game/script.rpy", line 729, in script
+    pleyer_nar "This bat couldn’t have…"
+  File "C:\Users\haris\Documents\renpy-6.99.10-sdk\renpy\ast.py", line 584, in execute
+    who = eval_who(self.who, self.who_fast)
+  File "C:\Users\haris\Documents\renpy-6.99.10-sdk\renpy\ast.py", line 501, in eval_who
+    raise Exception("Sayer '%s' is not defined." % who.encode("utf-8"))
+Exception: Sayer 'pleyer_nar' is not defined.
 
 Windows-8-6.2.9200
 Ren'Py 6.99.10.1227
-Don't Get Mugged 0.5
+Don't Get Mugged 0.55

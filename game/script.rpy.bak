@@ -138,7 +138,7 @@ image bg by_icecream:
     yalign 0.0
 image bg icecream_store:
     "store.jpg"
-    zoom 2.6
+    zoom 1.7
 image bg alley:
     "alley.jpg"
     zoom 0.9
@@ -146,6 +146,7 @@ image bg black = "black_screen.png"
 image bg brown = "brown_screen.png"
 image bg white = "white_screen.png"
 image bg gray = "gray_screen.png"
+image red = "red_screen.png"
 
 # Effect images
 image headache:
@@ -546,7 +547,7 @@ label doubleMugging:
             jump dMugPass
         "I don’t have any money":
             call addBack
-            jump dMugPass
+            jump dMugRun
         "None of you guys are getting anything":
             call addBack
             jump dMugFail
@@ -559,12 +560,67 @@ label addBack:
     return
     
 label dMugPass:
+    player "... and he was here first"
+    doubleRash "Hah! He agrees with me. Looks like I’ll be the one who gets to mug him,
+    you should just get out of here." 
+    doubleStalker "Like hell I will! I’ve already spent 20 minutes following him, I’m now
+    going to give up that easily."
+    player "“Whoa, 20 whole minutes?!? I hadn’t realized it had been that long. You
+    definitely have a lot of dedication. I’ve changed my mind, he deserves to mug me.”"
+    doubleRash "What! you can’t do that"
+    doubleStalker "Why can’t he? he clearly understands the value of hard work"
+    doubleRash "Hard work? What Hard Work? You just followed him around because 
+    you knew you would fail if you tried to mug him from the beginning."
+    doubleStalker "I could’ve mugged him whenever I wanted too. Unlike you, I plan
+    ahead to squeeze all the money from my victims."
+    doubleRash "Blah, you have to resort to your tricks because that’s the only way
+    a lousey mugger like you can make a profit."
+    
+    game "The stalker sneers back at the first mugger"
+    doubleStalker "I’ve been working for SHARK for 10 years. That’s long before you
+    before you joined, so don’t you be disrespecting me."
+    doubleRash "Hahaha, 10 years and you’re still at the lowest position in the organization.
+    I may have worked here for a short time but I will definitely rise up in rank. Unlike you,
+    who’ll stay stuck at the bottom for the rest of your life."
+    game "The conversation between the two muggers begins to get heated. It seems
+    they’ve drawn their attention away from you."
+    
+    
+    game "As they argue you manage to take a few steps back creating some distance
+    between you and the muggers. You begin looking for the next opportunity to slip away."
+    doubleRash "If you say that again I’ll stick this blade through your face."
+    doubleStalker "You wouldn’t dare. Murder between muggers of SHARK is against the
+    rules."
+    game "Both men have their knives drawn towards each other."
+    
+    show x2Calm normal:
+        parallel:  
+            linear 2.5 xalign 0.2
+        parallel:  
+            linear 2.5 yalign 0.65
+        parallel:
+            linear 2.5 zoom 0.75
+    show x2Rash angry:
+        parallel:  
+            linear 2.5 xalign 0.8
+        parallel:  
+            linear 2.5 yalign 0.68
+        parallel:
+            linear 2.5 zoom 0.75
+    game "You start to slowly slip away into the forest behind you."
+    doubleRash "Ha, you think they’ll care if I kill some small fry like you?"
+    doubleStalker "That’s it, I don’t care if it is against the rules I’m going to stick this blade
+    through your face."
+    game "One of the men swings his knife at the other and they break out into a knife fight."
     game "The men are arguing amonst themselves. You hear them talk about the
     ogrinization and how they were both breaking rules in there confrontation."
     game "as they argue you start to slowly slip away into the forest behind you"
     game "One of the men swings his knife at the other and they break out into a knife fight"
     game "Not wanting to learn which man gets the honour of mugging you.
     You hastily escape from the muggers and run of into the forest"
+    
+    hide x2Calm
+    hide x2Rash
     scene bg forest with quickFade
     game "You keep runnning until you're sure you've created enough distance"
     game "You expertly hide your tracks in a manner that suggests you have a lot of
@@ -572,6 +628,63 @@ label dMugPass:
     game "After a few more minutes you begin to feel that you've succesfully escaped the
     muggers and are not in any danger of being tracked"
     jump forest
+
+label dMugRun:
+    doubleRash "Got no money? I’m no fool. If you had no money, you wouldn’t have
+    someone tailing you."
+
+    player "But I’m telling you, I really have no money."
+    player "He says he’s been following me around, then ask him. He would be able to
+    tell you if I have anything of value"
+    doubleRash "Oii. Out with it, what’s he got on em?"
+    doubleStalker "I followed him since he entered the forest but all I’ve seen him do
+    is walk around  and play with dirt."
+    doubleRash "Dirt? What’s he playing with dirt for?"
+    doubleStalker "Why’re you asking me? How am I supposed to know?"
+    doubleRash "Wait, you don’t think he was searching for… you know, that place."
+    #*Danger music plays*
+    game "After a moment of contemplation the man realized what the other mugger is
+    implying. The Muggers exchange nervous glances at each others worried faces.
+    As if they’ve come to silent agreement; the two men with their weapons poised ready
+    to strike, slowly begin approaching from both sides."
+    game "From one look at their faces you can see that they’ve forgotten all about the
+    money. You instinctively take a defensive stance in response to the strong killing
+    intent revealed in their eyes."
+    #*Camera turns and one man stands in the centre*
+    hide x2Calm
+    show x2Rash angry:
+        xalign 0.5
+    game "There is no way you can win in a fight against both of them. After coming to
+    that realization you turn to the direction of the forest ready to run but one of muggers
+    is already blocking the path."
+    #*Camera turn to the other direction with no one in front of you*
+    hide x2Rash
+    game "You curse under your breath as you turn to run off in the other direction."
+    nvl clear
+    
+    show bg forest
+    show bloodSplatter at top
+    with vpunch
+    game "Before you could break into a sprint you feel the cold steel of the knife’s blade
+    in your back."
+    
+    show bg black
+    with Fade(0.2, 0.1, 0.2)
+    show bloodSplatter with hpunch
+    game "Unable to continue running you collapse onto the forest floor in front of you."
+    doubleRash "Finish him off!"
+    
+    show bloodSplatter at top
+    $ count = 1
+    while count  <= 5:
+        show red:
+            alpha (count*0.1)
+        show bloodSplatter at top with vpunch
+        pause (renpy.random.random()*0.92+0.08) 
+        $count += 1
+    game ".:. Game Over"
+    return
+
     
 label dMugFail:
     doubleStalker "Hah, there isn't any sense in keeping you alive if you're going to resist"
@@ -594,12 +707,41 @@ label forest:
     scene bg white with squares
     pause 0.75
     scene bg forest with squares
-    narrator "You continue wandering through the forest, additional descriptions"
+    narrator "Recovering slightly from your encounter, you continue to wander
+    through the forest."
     if lost_bat:
-        narrator "description of a loction in the forest. You find an object sticking out"
-        narrator "As you get closer you realize it's a base ball bat. And not just any baseball bat.
-        It was the baseball bat the first mugger tried to use against you!"
-        narrator "With all these muggers in town you decide it's best to hold on to the bat."
+        narrator "After some time you walk past a large tree that has been knocked over.
+        From the way the tree is split, you can conclude that it must have been stuck downt"
+        narrator "Whatever caused this must have had to use a tremendous amount of force."
+        narrator "Looking around, you notice an object lying underneath the fallen tree. You
+        suddenly freeze up as you recognize the object."
+        nvl clear
+        player_nar "It can’t be!"
+        narrator "Certain that what you’re seeing must be a mistake, you hesitantly reach out
+        to pull the object free from the tree."
+        player_nar "Hiyaaaaah!"
+        narrator "With a shout, you expend all your strength and yank the object free. A
+        thundering thud can be heard as the fallen tree smashes down onto a jagged rock
+        on the ground, but you hardly notice as you stare at the object in your hand. You are
+        forced to suspend your disbelief as you stare at the baseball bat in your hand. This
+        is the same baseball bat that the first mugger tried to use against you!"
+        nvl clear
+        player_nar "This bat couldn’t have…"
+        player_nar "I mean…" 
+        player_nar "It’s just a bat…"
+        player_nar "...right?"
+        nvl clear
+        narrator "The bat does not seem to be damaged at all! Inspecting its outer shell
+        yields no scratches or dents. In fact, the bat seems to glint in the moonlight as hold
+        it closer to inspect."
+        narrator "You pause, trying to fathom the absurdity of the bat you’re tightly holding
+        in your hands as if it could disappear at any moment. But of course, it doesn’t.
+        Baseball bats don’t just disappear." 
+        narrator "You finally come to terms with your inability to comprehend what
+        happened and decide it’s better not to question things too much."
+        narrator "With all these muggers around, you decide it’s best to hold onto the
+        bat. Shaking your head in disbelief, you continue to walk through the forest."
+
         python:
             inv.addItem(bat)
     else:
@@ -626,6 +768,7 @@ label forestContinuation:
          narrator "Narration about walking back into the forest"
          narrator "going through where you thought you went last time and after a few minutes
          of uncertainty, you find your self back to the enterance of the base"
+         nvl clear
          jump forestBaseDoor
          
 label forestBaseDoor:
@@ -895,7 +1038,7 @@ label afterDisco:
             jump intersection
 
 label iceCreamStore:
-    scene icecream_store with quickFade
+    scene bg icecream_store at top with quickFade
     game "Narration of entering the store"
     show headache
     show headache
